@@ -1,17 +1,16 @@
-name: Build Android APK
-on: 
-  push:
-    branches: [ main ]
+name: Android Build
+on:
   workflow_dispatch:
+  push:
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Setup Buildozer Action
+      - name: Build with Buildozer
         uses: ArtemSerebrennkov/buildozer-action@v1
         with:
           buildozer_version: master
