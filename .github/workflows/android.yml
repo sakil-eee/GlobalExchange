@@ -11,9 +11,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build with Buildozer
-        uses: pypa/buildozer-action@master
+        uses: docker://kivy/buildozer:master
         with:
-          command: buildozer android debug
+          args: android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
