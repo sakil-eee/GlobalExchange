@@ -19,11 +19,13 @@ jobs:
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:~/.local/bin
-          # লাইসেন্স অটো-একসেপ্ট এবং সরাসরি বিল্ড কমান্ড
+          # লাইসেন্স অটো-একসেপ্ট এবং বিল্ড কমান্ড
           yes | buildozer android debug || true
           
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: GlobalExchange-APK
-          path: bin/*.apk
+          # এটি এখন পুরো প্রজেক্ট খুঁজে APK বের করবে
+          path: "**/*.apk"
+          if-no-files-found: error
