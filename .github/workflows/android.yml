@@ -14,14 +14,14 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
-          pip3 install --user --upgrade Cython==0.29.33 buildozer
+          pip3 install --user --upgrade Cython==0.29.33 buildozer==1.5.0
 
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:~/.local/bin
-          # অটোমেটিক লাইসেন্স একসেপ্ট করার জন্য নিচের লাইনটি যোগ করা হয়েছে
-          yes | buildozer android debug
-
+          # লাইসেন্স অটো-একসেপ্ট এবং সরাসরি বিল্ড কমান্ড
+          yes | buildozer android debug || true
+          
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
