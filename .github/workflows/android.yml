@@ -19,7 +19,8 @@ jobs:
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:~/.local/bin
-          buildozer android debug
+          # অটোমেটিক লাইসেন্স একসেপ্ট করার জন্য নিচের লাইনটি যোগ করা হয়েছে
+          yes | buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
