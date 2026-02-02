@@ -8,15 +8,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Build with Buildozer
-        uses: ArtemSerebrennkov/buildozer-action@v1
+        uses: pypa/buildozer-action@master
         with:
           command: buildozer android debug
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: GlobalExchange-APK
           path: bin/*.apk
