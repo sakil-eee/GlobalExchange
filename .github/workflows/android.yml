@@ -10,7 +10,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install Buildozer
         run: |
           sudo apt update
           sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
@@ -19,13 +25,11 @@ jobs:
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:~/.local/bin
-          # লাইসেন্স অটো-একসেপ্ট এবং বিল্ড কমান্ড
-          yes | buildozer android debug || true
+          # আমরা এবার সরাসরি বিল্ড করবো এবং সব লগ দেখবো
+          yes | buildozer android debug
           
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: GlobalExchange-APK
-          # এটি এখন পুরো প্রজেক্ট খুঁজে APK বের করবে
-          path: "**/*.apk"
-          if-no-files-found: error
+          path: bin/*.apk
