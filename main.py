@@ -82,7 +82,7 @@ MDScreen:
                         pos_hint: {"center_x": .5}
 
                         MDLabel:
-                            text: "SMART UNLIMITED CONVERSION"
+                            text: "EVERYDAY LIVE CONVERSION"
                             halign: "center"
                             theme_text_color: "Secondary"
                             font_style: "Caption"
@@ -252,3 +252,4 @@ class CurrencyApp(MDApp):
 
 if __name__ == "__main__":
     CurrencyApp().run()
+
