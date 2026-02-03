@@ -2,20 +2,23 @@ from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 from kivy.lang import Builder
 from kivy.core.window import Window
+from kivy.utils import platform
 from kivymd.uix.button import MDFillRoundFlatIconButton, MDFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.list import OneLineListItem, MDList
 from kivymd.uix.textfield import MDTextField
 from kivy.uix.scrollview import ScrollView
 from kivymd.uix.boxlayout import MDBoxLayout
+from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from kivy.storage.jsonstore import JsonStore
 from datetime import date
 import requests
-from kivy.metrics import dp # ডিপিআই হ্যান্ডেল করার জন্য
+from kivy.metrics import dp
 
-# ১. মোবাইল রেজোলিউশন সেট করা (৩৬০x৬৪০ স্ট্যান্ডার্ড অ্যান্ড্রয়েড সাইজ)
-Window.size = (360, 640)
+# ১. স্মার্ট ভিউ চেক: পিসিতে মোবাইল সাইজ, ফোনে ফুল স্ক্রিন
+if platform not in ['android', 'ios']:
+    Window.size = (360, 640)
 
 store = JsonStore('currency_cache.json')
 
@@ -26,19 +29,19 @@ MDScreen:
     MDBoxLayout:
         orientation: 'vertical'
         
-        # ১. হেডার অংশ
+        # হেডার অংশ
         MDBoxLayout:
             size_hint_y: None
-            height: "100dp" 
+            height: "110dp" 
             md_bg_color: [0.12, 0.15, 0.35, 1]
-            radius: [0, 0, 30, 30]
-            padding: "10dp"
+            radius: [0, 0, 35, 35]
+            padding: "15dp"
             orientation: 'vertical'
             
             MDLabel:
                 text: "GLOBAL"
                 halign: "center"
-                font_style: "H5"
+                font_style: "H4"
                 bold: True
                 theme_text_color: "Custom"
                 text_color: [1, 0.76, 0.03, 1]
@@ -46,33 +49,33 @@ MDScreen:
             MDLabel:
                 text: "CURRENCY HUB"
                 halign: "center"
-                font_style: "Caption"
-                letter_spacing: "3sp"
+                font_style: "Button"
+                letter_spacing: "4sp"
                 theme_text_color: "Custom"
                 text_color: [1, 1, 1, 1]
                 
-        # ২. মেইন কন্টেন্ট এলাকা (AnchorLayout কার্ডটিকে মাঝখানে রাখবে)
+        # মেইন কন্টেন্ট
         AnchorLayout:
             anchor_x: 'center'
             anchor_y: 'center'
             
             ScrollView:
                 do_scroll_x: False
-                size_hint: (None, 1) # উচ্চতা পুরোটা নেবে যাতে মাঝখানে বসতে পারে
-                width: min(root.width, dp(420)) # পিসিতে চ্যাপ্টা হওয়া রোধ করবে
+                size_hint: (None, 1)
+                width: min(root.width, dp(420))
                 
                 MDBoxLayout:
                     orientation: 'vertical'
-                    padding: ["20dp", "40dp", "20dp", "40dp"] # উপরে-নিচে গ্যাপ দেবে
+                    padding: ["20dp", "30dp", "20dp", "30dp"]
                     spacing: "15dp"
-                    adaptive_height: True # এইটা গুরুত্বপূর্ণ
+                    adaptive_height: True
 
                     MDCard:
                         orientation: 'vertical'
                         padding: "25dp"
-                        spacing: "20dp"
-                        radius: [25, 25, 25, 25]
-                        elevation: 2
+                        spacing: "15dp"
+                        radius: [30, 30, 30, 30]
+                        elevation: 3
                         md_bg_color: [1, 1, 1, 1]
                         size_hint_y: None
                         height: self.minimum_height
@@ -93,7 +96,7 @@ MDScreen:
                             font_size: "18sp"
 
                         MDBoxLayout:
-                            spacing: "15dp"
+                            spacing: "12dp"
                             adaptive_height: True
                             
                             MDFillRoundFlatIconButton:
@@ -112,14 +115,23 @@ MDScreen:
                                 md_bg_color: [0, 0.5, 0.35, 1]
                                 on_release: app.show_currency_picker("to")
 
+                        # --- রেজাল্টের জন্য নিট এন্ড ক্লিন গ্যাপ ---
+                        Widget:
+                            size_hint_y: None
+                            height: "25dp"
+
                         MDLabel:
                             id: result_label
                             text: "0.00"
                             halign: "center"
-                            font_style: "H4"
+                            font_style: "H3"
                             bold: True
                             theme_text_color: "Primary"
-                            padding: [0, "15dp"]
+
+                        Widget:
+                            size_hint_y: None
+                            height: "25dp"
+                        # -----------------------------------
 
                         MDFillRoundFlatButton:
                             text: "CONVERT NOW"
@@ -153,7 +165,6 @@ class CurrencyApp(MDApp):
         Clock.schedule_once(self.fetch_codes, 0.5)
         return Builder.load_string(KV)
 
-    # ... (বাকি ফাংশনগুলো আগের মতোই থাকবে, কোনো পরিবর্তন নেই)
     def fetch_codes(self, dt):
         if store.exists('currency_codes'):
             self.all_codes = store.get('currency_codes')['data']
@@ -171,7 +182,7 @@ class CurrencyApp(MDApp):
     def show_currency_picker(self, picker_type):
         self.active_type = picker_type
         content = MDBoxLayout(orientation="vertical", spacing="10dp", size_hint_y=None, height="400dp")
-        self.search_field = MDTextField(hint_text="Search currency (e.g. BDT)", mode="fill")
+        self.search_field = MDTextField(hint_text="Search currency...", mode="fill")
         self.search_field.bind(text=self.filter_list) 
         self.list_container = MDList()
         self.update_list(self.all_codes)
@@ -237,7 +248,7 @@ class CurrencyApp(MDApp):
             except: continue
         
         if not success:
-            self.root.ids.result_label.text = "Connection Error"
+            self.root.ids.result_label.text = "Error"
 
 if __name__ == "__main__":
     CurrencyApp().run()
